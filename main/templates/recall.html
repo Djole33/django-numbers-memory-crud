@@ -13,26 +13,26 @@
             {% csrf_token %}
             <h1 style="font-weight: bold;margin-top: 5%;">Number of digits to guess: 2</h1>
             <br /><br />
-            {% if guesses %}
+            {% if not guesses %}
                 {{ form.as_p}}
             {% endif %}
             <br />
-            <ol>
                 {% for guess in guesses %}
-                    <li>{{ guess }}</li>
+                    <h2 style="color: black;font-size: 50px;"><strong>{{ guess }}</strong></h2>
                 {% endfor %}
-            </ol>
-            <br />
-            <button class="btn btn-success">Enter</button>
+            <br /> <br />
+            {% if not guesses %}
+                <button class="btn btn-success">Enter</button>
+            {% endif %}
         </form>
         {% if guesses %}
-            <form method="post" action="#">
+            <form method="post" action="{% url 'delete-guess' %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Delete Last Guess</button>
+                <button type="submit" class="btn btn-danger">Delete Guess</button>
             </form>
         {% endif %}
         {% if guesses %}
-            <form method="post" action="#">
+            <form method="post" action="{% url 'results' %}">
                 {% csrf_token %}
                 <button class="btn btn-info" type="submit">See Results</button>
             </form>

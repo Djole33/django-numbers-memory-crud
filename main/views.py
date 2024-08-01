@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 def home(request):
     if 'number' in request.session:
         del request.session['number']
+    if 'guesses' in request.session:
+        del request.session['guesses']
     return render(request, 'index.html')
 
 def generate_number_with_digits(num_digits: int) -> int:
@@ -57,3 +59,19 @@ def guess_view(request: HttpRequest) -> HttpResponse:
     guesses = request.session['guesses']
     
     return render(request, 'recall.html', {'form': form, 'guesses': guesses})
+
+def delete_guess(request: HttpRequest) -> HttpResponse:
+    # Check if guesses exist in session
+    if 'guesses' in request.session and request.session['guesses']:
+        # Remove the last guess from the session list
+        request.session['guesses'].pop()
+        request.session.modified = True  # Mark session as modified to save changes
+
+    return redirect('/recall')
+
+def results(request: HttpRequest) -> HttpResponse:
+    # Retrieve the number from the session
+    number = request.session['number']
+    # Check if guesses exist in session
+    guesses = request.session.get('guesses', {})
+    return render(request, 'results.html', {'guesses': guesses, 'number': number})
