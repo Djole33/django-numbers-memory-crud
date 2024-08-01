@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from random import shuffle
 import logging
 from random import randint
+from .forms import NumberForm
 
 logger = logging.getLogger(__name__)
 
@@ -35,3 +36,24 @@ def numbers_view(request: HttpRequest) -> HttpResponse:
     
     # Render the 'numbers-list.html' template with the 'number' context
     return render(request, 'numbers-list.html', {"number": number})
+
+def guess_view(request: HttpRequest) -> HttpResponse:
+    # Use session to store guesses across requests
+    if 'guesses' not in request.session:
+        request.session['guesses'] = []
+
+    if request.method == "POST":
+        form = NumberForm(request.POST)
+        if form.is_valid():
+            # Append the valid guess to the session list
+            guess = form.cleaned_data['guess']
+            request.session['guesses'].append(guess)
+            request.session.modified = True  # Mark session as modified to save changes
+            return redirect('/recall')
+    else:
+        form = NumberForm()
+
+    # Retrieve guesses from session
+    guesses = request.session['guesses']
+    
+    return render(request, 'recall.html', {'form': form, 'guesses': guesses})
