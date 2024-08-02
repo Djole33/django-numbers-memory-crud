@@ -11,7 +11,7 @@
     <div class="form-group container" style="text-align: center;">
         <form method="POST">
             {% csrf_token %}
-            <h1 style="font-weight: bold;margin-top: 5%;">Number of digits to guess: 2</h1>
+            <h1 style="font-weight: bold;margin-top: 5%;">Number of digits to guess: {{ nums_digits }}</h1>
             <br /><br />
             {% if not guesses %}
                 {{ form.as_p}}

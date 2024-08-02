@@ -1,5 +1,5 @@
 from django import forms
-from .models import Guess
+from .models import Guess, Level
 
 class NumberForm(forms.ModelForm):
     class Meta:
@@ -8,3 +8,7 @@ class NumberForm(forms.ModelForm):
         widgets = {
             'guess': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+class LevelForm(forms.Form):
+    LEVEL_CHOICES = [(i, f'Level {i} ({i*2} digits)') for i in range(1, 11)]
+    level = forms.ChoiceField(choices=LEVEL_CHOICES, label="Select Level")
